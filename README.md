@@ -4,6 +4,12 @@
 
 这是一个无需账户、数据库、GPU或硬件的纯前端竞赛 MVP。公开海况、用户填写参数、模拟情景各自标注来源；规则判断、情景比较和报告均可在本机断开外网时使用。
 
+## 验收与预览
+
+已完成 50 项单元测试、6 项生产构建浏览器流程测试及真实快照校验。详见 [验收记录](docs/acceptance.md)。源码、已编译站点和验收证据见本仓库的 [Releases](https://github.com/hikjesen/liaoyu-zhice/releases)。仓库保持私人。
+
+![辽渔智策环境总览](docs/screenshots/overview.png)
+
 ## 运行
 
 开发环境：Node.js 22.19.0、pnpm 10.20.0（版本写入 package.json 与 CI）。

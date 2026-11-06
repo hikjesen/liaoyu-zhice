@@ -14,6 +14,7 @@ test("full offline assessment, scenarios, persistence and report export", async 
     page.getByRole("heading", { name: "读懂海况，让养殖决策有据可依。" }),
   ).toBeVisible();
   await expect(page.locator(".metric-card")).toHaveCount(4);
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "test-results/screenshots/01-overview.png",
     fullPage: true,
@@ -24,6 +25,7 @@ test("full offline assessment, scenarios, persistence and report export", async 
   await expect(page.getByTestId("pass-count")).toHaveText("4");
   await page.getByRole("button", { name: "载入高温情景", exact: true }).click();
   await expect(page.getByTestId("outside-count")).toHaveText("1");
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "test-results/screenshots/02-evaluation.png",
     fullPage: true,
@@ -38,6 +40,7 @@ test("full offline assessment, scenarios, persistence and report export", async 
   await expect(page.locator(".scenario-table tbody tr")).toHaveCount(2);
   await page.reload();
   await expect(page.locator(".scenario-table tbody tr")).toHaveCount(2);
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "test-results/screenshots/03-scenarios.png",
     fullPage: true,
@@ -55,6 +58,7 @@ test("full offline assessment, scenarios, persistence and report export", async 
   expect(report.assessment.outside).toBe(1);
   expect(report.scenarios).toHaveLength(2);
   expect(report.marine.kind).toBe("model-forecast-snapshot");
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "test-results/screenshots/04-report.png",
     fullPage: true,
@@ -66,6 +70,7 @@ test("full offline assessment, scenarios, persistence and report export", async 
     printBackground: true,
     preferCSSPageSize: true,
   });
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "test-results/screenshots/05-print-layout.png",
     fullPage: true,
@@ -92,6 +97,7 @@ test("390px mobile view has working navigation and no horizontal body overflow",
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBeTruthy();
+  await page.evaluate(() => window.scrollTo(0, 0));
   await page.screenshot({
     path: "test-results/screenshots/06-mobile.png",
     fullPage: true,
