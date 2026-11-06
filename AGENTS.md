@@ -9,3 +9,5 @@ Business scope: one illustrative Changhai site, one scallop ear-hanging culture 
 Official DB21/T3719-2023 final text was retrieved on2026-11-06; rule facts are on PDFpage5 / printedpage1, sections4.1/4.2. Source record includes original SHA256; full standard not redistributed. Update tests and provenance if changing thresholds. Simulation values must remain labelled.
 
 Preserve upstream MIT and dependency notices. Update pnpm-lock.yaml whenever package versions change. Keep all runtime assets local. Validate browser navigation, scenario persistence, JSON import/export and 390px layout; inspect screenshots before declaring acceptance.
+
+Actions artifact storage is full on this account. Use this repository's private draft Release for deliverables; never delete unrelated artifacts or change billing to make space. Publish only after checking acceptance. CI has repository-scoped contents:write for this release step; PR runs do not publish.

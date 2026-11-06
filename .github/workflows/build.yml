@@ -10,6 +10,8 @@ jobs:
   verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -23,25 +25,8 @@ jobs:
       - run: pnpm verify:data
       - run: pnpm typecheck
       - run: pnpm test
-      - run: pnpm build
-      - name: Archive source at this commit
-        run: git archive --format=zip --prefix=liaoyu-zhice/ --output=liaoyu-zhice-source.zip HEAD
-      - uses: actions/upload-artifact@v4
-        with:
-          name: liaoyu-zhice-source
-          path: liaoyu-zhice-source.zip
-          retention-days: 30
-      - uses: actions/upload-artifact@v4
-        with:
-          name: liaoyu-zhice-site
-          path: |
-            dist/
-            scripts/serve.mjs
-            scripts/serve.py
-            docs/quick-start.md
-            Start-Liaoyu.cmd
-            start-liaoyu.sh
-          retention-days: 30
+      - id: build
+        run: pnpm build
       - name: Select preinstalled Chromium
         shell: bash
         run: |
@@ -52,12 +37,26 @@ jobs:
           else
             pnpm exec playwright install chromium
           fi
-      - run: pnpm test:e2e
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: acceptance-evidence
-          path: |
-            playwright-report/
-            test-results/
-          retention-days: 30
+      - id: browser
+        run: pnpm test:e2e
+      - name: Package source, static site and acceptance evidence
+        if: always() && steps.build.outcome == 'success'
+        shell: bash
+        run: |
+          mkdir -p release-pack
+          git archive --format=zip --prefix=liaoyu-zhice/ --output=release-pack/liaoyu-zhice-source.zip HEAD
+          zip -qr release-pack/liaoyu-zhice-site.zip dist scripts/serve.mjs scripts/serve.py docs/quick-start.md Start-Liaoyu.cmd start-liaoyu.sh
+          if [ -d test-results ]; then
+            zip -qr release-pack/liaoyu-zhice-acceptance.zip test-results playwright-report
+          fi
+          printf 'Commit: %s\nRun: https://github.com/%s/actions/runs/%s\nBrowser acceptance: %s\n' "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" '${{ steps.browser.outcome }}' > release-pack/BUILD.txt
+          cd release-pack
+          sha256sum *.zip > SHA256SUMS.txt
+      - name: Preserve deliverables in a private draft release
+        if: always() && steps.build.outcome == 'success' && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          TAG="build-${GITHUB_RUN_NUMBER}-${GITHUB_RUN_ATTEMPT}"
+          gh release create "$TAG" release-pack/* --target "$GITHUB_SHA" --draft --prerelease --title "Liaoyu Zhice MVP - ${GITHUB_SHA:0:7}" --notes-file release-pack/BUILD.txt
