@@ -1,0 +1,45 @@
+name: Verify and build MVP
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.20.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.19.0'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm verify:data
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: acceptance-evidence
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: liaoyu-zhice-site
+          path: |
+            dist/
+            scripts/serve.mjs
+            scripts/serve.py
+            docs/quick-start.md
+          retention-days: 30

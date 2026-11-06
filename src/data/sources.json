@@ -1,0 +1,54 @@
+[
+  {
+    "id": "db21-3719",
+    "title": "DB21/T 3719—2023 虾夷扇贝吊耳养殖技术规程",
+    "publisher": "全国标准信息公共服务平台",
+    "url": "https://dbba.sacinfo.org.cn/stdDetail/2639a50053cec0d0480009c83e7fc31dc52428da7ae87cbcbfbe1cab5e4647d4",
+    "date": "2023-04-30",
+    "status": "正式全文已下载并核对第4.1、4.2条",
+    "usage": "辽宁沿海吊耳养殖适用；水深15–30 m，海水平均流速不宜超过20 cm/s，水温0–24 °C，盐度28–33。PDF第5页，纸面第1页。",
+    "license": "仅整理事实参数与原创解释；原文权利归发布机构，仓库不再分发完整标准。",
+    "downloadUrl": "https://dbba.sacinfo.org.cn/portal/download/2639a50053cec0d0480009c83e7fc31dc52428da7ae87cbcbfbe1cab5e4647d4",
+    "sha256": "6b59558c579e23e345454d5e780c044ab8592a682765773a7845c5405f27d31d"
+  },
+  {
+    "id": "db21-4105",
+    "title": "DB21/T 4105—2025 良种生态适应性评价",
+    "publisher": "国家数字标准馆",
+    "url": "https://www.ndls.org.cn/standard/detail/ee4d6406e04d42efccc32ecedf77550f",
+    "date": "2025-02-28",
+    "status": "背景参考，未纳入规则计算",
+    "usage": "良种生态适应性评价的扩展资料；不与吊耳养殖环境阈值混用。",
+    "license": "仅链接与原创概述，不收录全文。"
+  },
+  {
+    "id": "ln-industry-2025",
+    "title": "省十四届人大五次会议第1450315号建议答复",
+    "publisher": "辽宁省农业农村厅",
+    "url": "https://nync.ln.gov.cn/nync/zfxxgk/fdzdgknr/jyta/srddbjy/sssjrdwchy2026n/2026080510590998860/index.shtml",
+    "date": "2026-08-05",
+    "status": "2025年统计口径",
+    "usage": "海水产品475.6万吨、海水养殖401.7万吨；只作产业背景，不参与养殖条件判断。",
+    "license": "公开统计事实，注明发布单位、统计年份与口径。"
+  },
+  {
+    "id": "ln-ecology-2023",
+    "title": "2023年辽宁省海洋生态预警监测公报发布说明",
+    "publisher": "辽宁省人民政府 / 省自然资源厅",
+    "url": "https://www.ln.gov.cn/web/ywdt/tjdt/2024083010393556284/",
+    "date": "2024-08-30",
+    "status": "2023年生态背景",
+    "usage": "公开说明涉及辽东湾底部、大连东部近岸富营养化及赤潮等生态问题；不转换成当前站点风险。",
+    "license": "官方公开摘要事实；仅收录原创概述与来源。"
+  },
+  {
+    "id": "open-meteo",
+    "title": "Open-Meteo Marine API",
+    "publisher": "Open-Meteo / Copernicus Marine / Meteo-France 等模型提供方",
+    "url": "https://open-meteo.com/en/docs/marine-weather-api",
+    "date": "2026-11-06",
+    "status": "已获取真实模型预报快照",
+    "usage": "海温、浪高、海流逐小时模型值；时间、单位、网格坐标、请求URL随快照保存。",
+    "license": "数据 CC BY 4.0；免费接口用于非商业原型，商业部署需复核服务条款。"
+  }
+]
