@@ -37,6 +37,13 @@ jobs:
           else
             pnpm exec playwright install chromium
           fi
+      - name: Install Chinese font for rendering acceptance
+        shell: bash
+        run: |
+          mkdir -p "$HOME/.local/share/fonts"
+          curl -fL --retry 2 --max-time 60 'https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf' -o "$HOME/.local/share/fonts/NotoSansCJKsc-Regular.otf"
+          fc-cache -f "$HOME/.local/share/fonts"
+          fc-match ':lang=zh-cn' | grep 'Noto Sans CJK SC'
       - id: browser
         run: pnpm test:e2e
       - name: Package source, static site and acceptance evidence
