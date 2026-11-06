@@ -4,6 +4,8 @@
 
 解压站点包，进入包含 `dist` 和 `scripts` 的目录，在该目录打开终端。
 
+Windows可双击 `Start-Liaoyu.cmd`，它会寻找本机的Python或Node.js并启动站点。macOS/Linux可运行 `sh start-liaoyu.sh`。需要手动启动时，使用下面命令。
+
 有 Node.js 时执行：
 
 ```sh

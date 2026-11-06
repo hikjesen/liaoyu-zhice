@@ -1,3 +1,13 @@
 [
- {"id":"changhai-demo","name":"长海近海示例点","shortName":"长海近海","latitude":39.05,"longitude":122.8,"region":"辽宁 · 大连 · 长海周边","note":"为公开海况查询选择的示例坐标，未绑定真实养殖场。","species":"虾夷扇贝","method":"吊耳养殖"}
+  {
+    "id": "changhai-demo",
+    "name": "长海近海示例点",
+    "shortName": "长海近海",
+    "latitude": 39.05,
+    "longitude": 122.8,
+    "region": "辽宁 · 大连 · 长海周边",
+    "note": "为公开海况查询选择的示例坐标，未绑定真实养殖场。",
+    "species": "虾夷扇贝",
+    "method": "吊耳养殖"
+  }
 ]

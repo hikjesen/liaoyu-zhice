@@ -1,7 +1,105 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
-import {workspace,site,refreshMarine,useSnapshot} from './stores/workspace';
-const route=useRoute();
-const menus=[{to:'/',label:'养殖环境总览',en:'OVERVIEW',icon:'◫'},{to:'/evaluation',label:'养殖条件评估',en:'ASSESSMENT',icon:'⌘'},{to:'/scenarios',label:'情景推演',en:'SCENARIOS',icon:'⇄'},{to:'/reports',label:'评估报告',en:'REPORTS',icon:'▤'}];
+import { useRoute } from "vue-router";
+import {
+  workspace,
+  site,
+  refreshMarine,
+  useSnapshot,
+} from "./stores/workspace";
+const route = useRoute();
+const menus = [
+  { to: "/", label: "养殖环境总览", en: "OVERVIEW", icon: "◫" },
+  { to: "/evaluation", label: "养殖条件评估", en: "ASSESSMENT", icon: "⌘" },
+  { to: "/scenarios", label: "情景推演", en: "SCENARIOS", icon: "⇄" },
+  { to: "/reports", label: "评估报告", en: "REPORTS", icon: "▤" },
+];
 </script>
-<template><div class="app-shell"><aside class="sidebar"><router-link to="/" class="brand"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M5 18q9-12 19 0t19 0M5 31q9-12 19 0t19 0"/></svg><div><strong>辽渔智策</strong><small>LIAOYU ZHICE</small></div></router-link><div class="side-caption">智慧渔业 · 辅助决策工作台</div><nav aria-label="主导航"><router-link v-for="m in menus" :key="m.to" :to="m.to" :class="{active:route.path===m.to}"><span class="nav-icon">{{m.icon}}</span><div>{{m.label}}<small>{{m.en}}</small></div><span class="nav-arrow">›</span></router-link></nav><div class="sidebar-bottom"><span class="tiny-dot"></span> 辽宁海洋智慧应用<div class="side-note">虾夷扇贝 · 吊耳养殖<br>可解释规则 / 本地情景 / 离线演示</div><span class="version">MVP 0.1.0</span></div></aside><div class="main-shell"><header class="topbar"><div class="breadcrumb">工作台 <span>/</span> <strong>{{route.meta.title}}</strong></div><div class="top-actions"><span class="location">{{site.region}}</span><span class="pill" :class="workspace.mode==='snapshot'?'reference':'pass'">{{workspace.mode==='snapshot'?'离线快照':'在线模型'}}</span></div></header><main><div class="workspace-bar"><div><span class="overline">CHANGHAI · LIAONING</span><span class="site-name">{{site.name}}</span><span class="species-tag">{{site.species}} / {{site.method}}</span></div><div class="button-row"><el-button size="small" @click="useSnapshot">使用内置快照</el-button><el-button size="small" type="primary" :loading="workspace.loading" @click="refreshMarine">更新海况</el-button></div></div><el-alert v-if="workspace.error" :title="workspace.error" type="warning" show-icon :closable="true" @close="workspace.error=''"/><el-alert v-if="workspace.storageError" :title="workspace.storageError" type="warning" show-icon :closable="false"/><router-view/><footer class="footer"><span>辽渔智策 · 辽宁近海水产养殖辅助决策原型</span><span>公开模型数据与用户参数分离 · 规则依据可追溯</span></footer></main></div></div></template>
+<template>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <router-link to="/" class="brand"
+        ><svg viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M5 18q9-12 19 0t19 0M5 31q9-12 19 0t19 0" />
+        </svg>
+        <div>
+          <strong>辽渔智策</strong><small>LIAOYU ZHICE</small>
+        </div></router-link
+      >
+      <div class="side-caption">智慧渔业 · 辅助决策工作台</div>
+      <nav aria-label="主导航">
+        <router-link
+          v-for="m in menus"
+          :key="m.to"
+          :to="m.to"
+          :class="{ active: route.path === m.to }"
+          ><span class="nav-icon">{{ m.icon }}</span>
+          <div>
+            {{ m.label }}<small>{{ m.en }}</small>
+          </div>
+          <span class="nav-arrow">›</span></router-link
+        >
+      </nav>
+      <div class="sidebar-bottom">
+        <span class="tiny-dot"></span> 辽宁海洋智慧应用
+        <div class="side-note">
+          虾夷扇贝 · 吊耳养殖<br />可解释规则 / 本地情景 / 离线演示
+        </div>
+        <span class="version">MVP 0.1.0</span>
+      </div>
+    </aside>
+    <div class="main-shell">
+      <header class="topbar">
+        <div class="breadcrumb">
+          工作台 <span>/</span> <strong>{{ route.meta.title }}</strong>
+        </div>
+        <div class="top-actions">
+          <span class="location">{{ site.region }}</span
+          ><span
+            class="pill"
+            :class="workspace.mode === 'snapshot' ? 'reference' : 'pass'"
+            >{{ workspace.mode === "snapshot" ? "离线快照" : "在线模型" }}</span
+          >
+        </div>
+      </header>
+      <main>
+        <div class="workspace-bar">
+          <div>
+            <span class="overline">CHANGHAI · LIAONING</span
+            ><span class="site-name">{{ site.name }}</span
+            ><span class="species-tag"
+              >{{ site.species }} / {{ site.method }}</span
+            >
+          </div>
+          <div class="button-row">
+            <el-button size="small" @click="useSnapshot">使用内置快照</el-button
+            ><el-button
+              size="small"
+              type="primary"
+              :loading="workspace.loading"
+              @click="refreshMarine"
+              >更新海况</el-button
+            >
+          </div>
+        </div>
+        <el-alert
+          v-if="workspace.error"
+          :title="workspace.error"
+          type="warning"
+          show-icon
+          :closable="true"
+          @close="workspace.error = ''"
+        /><el-alert
+          v-if="workspace.storageError"
+          :title="workspace.storageError"
+          type="warning"
+          show-icon
+          :closable="false"
+        /><router-view />
+        <footer class="footer">
+          <span>辽渔智策 · 辽宁近海水产养殖辅助决策原型</span
+          ><span>公开模型数据与用户参数分离 · 规则依据可追溯</span>
+        </footer>
+      </main>
+    </div>
+  </div>
+</template>

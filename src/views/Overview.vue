@@ -1,25 +1,249 @@
 <script setup lang="ts">
-import {computed} from 'vue';
-import type {EChartsOption} from 'echarts';
-import {workspace,site,hourIndex,assessment} from '../stores/workspace';
-import {currentToCms} from '../services/marine';
-import ChartPanel from '../components/ChartPanel.vue';
-import ReCol from '../components/ReCol';
-import industry from '../data/industry.json';
-import sources from '../data/sources.json';
-const raw=computed(()=>workspace.snapshot.raw);
-const format=(v:number|null|undefined,d=1)=>v==null?'—':v.toFixed(d);
-const values=computed(()=>[
- {title:'海面温度',value:format(raw.value.hourly.sea_surface_temperature[hourIndex.value]),unit:'°C',caption:'海面模型值 · 非养殖水层实测',class:'mint',symbol:'T'},
- {title:'有效波高',value:format(raw.value.hourly.wave_height[hourIndex.value],2),unit:'m',caption:'近海环境背景 · 不参与养殖阈值',class:'blue',symbol:'≈'},
- {title:'海面流速',value:format(currentToCms(raw.value.hourly.ocean_current_velocity[hourIndex.value],raw.value.hourly_units.ocean_current_velocity)),unit:'cm/s',caption:'按响应单位换算 · 非水层平均流速',class:'sand',symbol:'↗'},
- {title:'已完成参数评估',value:String(assessment.value.passed+assessment.value.outside),unit:'/ 4',caption:`${assessment.value.outside} 项超出参考范围 · ${assessment.value.pending} 项待补充`,class:'lilac',symbol:'✓'}
+import { computed } from "vue";
+import type { EChartsOption } from "echarts";
+import { workspace, site, hourIndex, assessment } from "../stores/workspace";
+import { currentToCms } from "../services/marine";
+import ChartPanel from "../components/ChartPanel.vue";
+import ReCol from "../components/ReCol";
+import industry from "../data/industry.json";
+import sources from "../data/sources.json";
+const raw = computed(() => workspace.snapshot.raw);
+const format = (v: number | null | undefined, d = 1) =>
+  v == null ? "—" : v.toFixed(d);
+const values = computed(() => [
+  {
+    title: "海面温度",
+    value: format(raw.value.hourly.sea_surface_temperature[hourIndex.value]),
+    unit: "°C",
+    caption: "海面模型值 · 非养殖水层实测",
+    class: "mint",
+    symbol: "T",
+  },
+  {
+    title: "有效波高",
+    value: format(raw.value.hourly.wave_height[hourIndex.value], 2),
+    unit: "m",
+    caption: "近海环境背景 · 不参与养殖阈值",
+    class: "blue",
+    symbol: "≈",
+  },
+  {
+    title: "海面流速",
+    value: format(
+      currentToCms(
+        raw.value.hourly.ocean_current_velocity[hourIndex.value],
+        raw.value.hourly_units.ocean_current_velocity,
+      ),
+    ),
+    unit: "cm/s",
+    caption: "按响应单位换算 · 非水层平均流速",
+    class: "sand",
+    symbol: "↗",
+  },
+  {
+    title: "已完成参数评估",
+    value: String(assessment.value.passed + assessment.value.outside),
+    unit: "/ 4",
+    caption: `${assessment.value.outside} 项超出参考范围 · ${assessment.value.pending} 项待补充`,
+    class: "lilac",
+    symbol: "✓",
+  },
 ]);
-const chart=computed<EChartsOption>(()=>({animationDuration:500,color:['#218e79','#86b3c7'],tooltip:{trigger:'axis'},legend:{bottom:0,icon:'roundRect'},grid:{left:52,right:48,top:28,bottom:64},xAxis:{type:'category',boundaryGap:false,data:raw.value.hourly.time.map(t=>t.slice(5).replace('T',' ')),axisLabel:{color:'#81918f',fontSize:10}},yAxis:[{type:'value',name:'海温 °C',scale:true,splitLine:{lineStyle:{color:'#edf2f0'}}},{type:'value',name:'波高 m',splitLine:{show:false}}],series:[{name:'海面温度',type:'line',smooth:true,showSymbol:false,data:raw.value.hourly.sea_surface_temperature,areaStyle:{color:'rgba(33,142,121,.10)'},lineStyle:{width:3}},{name:'有效波高',type:'line',smooth:true,showSymbol:false,yAxisIndex:1,data:raw.value.hourly.wave_height,lineStyle:{width:2,type:'dashed'}}]}));
-const industrySource=sources.find(s=>s.id===industry.sourceId)!;
+const chart = computed<EChartsOption>(() => ({
+  animationDuration: 500,
+  color: ["#218e79", "#86b3c7"],
+  tooltip: { trigger: "axis" },
+  legend: { bottom: 0, icon: "roundRect" },
+  grid: { left: 52, right: 48, top: 28, bottom: 64 },
+  xAxis: {
+    type: "category",
+    boundaryGap: false,
+    data: raw.value.hourly.time.map((t) => t.slice(5).replace("T", " ")),
+    axisLabel: { color: "#81918f", fontSize: 10 },
+  },
+  yAxis: [
+    {
+      type: "value",
+      name: "海温 °C",
+      scale: true,
+      splitLine: { lineStyle: { color: "#edf2f0" } },
+    },
+    { type: "value", name: "波高 m", splitLine: { show: false } },
+  ],
+  series: [
+    {
+      name: "海面温度",
+      type: "line",
+      smooth: true,
+      showSymbol: false,
+      data: raw.value.hourly.sea_surface_temperature,
+      areaStyle: { color: "rgba(33,142,121,.10)" },
+      lineStyle: { width: 3 },
+    },
+    {
+      name: "有效波高",
+      type: "line",
+      smooth: true,
+      showSymbol: false,
+      yAxisIndex: 1,
+      data: raw.value.hourly.wave_height,
+      lineStyle: { width: 2, type: "dashed" },
+    },
+  ],
+}));
+const industrySource = sources.find((s) => s.id === industry.sourceId)!;
 </script>
-<template><div class="page-heading"><div><h1>读懂海况，让养殖决策有据可依。</h1><p>把公开海洋数据、辽宁养殖条件与情景比较放进一个工作台。</p></div><router-link to="/evaluation"><el-button type="primary" size="large">开始环境评估 <span class="arrow-inline">↗</span></el-button></router-link></div>
-<section class="hero-card"><div class="hero-copy"><span class="eyebrow">LOCAL KNOWLEDGE · CLEAR DECISIONS</span><h2>从一片海域，<br>到一份可解释的判断。</h2><p>面向辽宁沿海虾夷扇贝吊耳养殖，逐项核对水温、盐度、水深和平均流速。每个结论都能查看输入来源与规则依据。</p><div class="hero-tags"><span>4 项条件规则</span><span>72 小时海况窗口</span><span>离线可演示</span></div></div><div class="sea-visual" role="img" aria-label="示例海域示意图，非真实地理地图"><div class="sea-grid"></div><div class="sea-ring ring-one"></div><div class="sea-ring ring-two"></div><div class="site-pin"><i></i><span>长海近海<br><small>示例查询点</small></span></div><svg class="sea-waves" viewBox="0 0 500 230" aria-hidden="true"><path d="M-20 95Q100 0 220 95T520 95M-20 125Q100 30 220 125T520 125M-20 155Q100 60 220 155T520 155M-20 185Q100 90 220 185T520 185"/></svg><div class="coordinate">{{site.latitude.toFixed(2)}}°N / {{site.longitude.toFixed(2)}}°E <span>海域示意</span></div></div></section>
-<el-row :gutter="18" class="metrics"><ReCol v-for="metric in values" :key="metric.title" :xs="24" :sm="12" :lg="6"><article class="metric-card"><div class="metric-head"><span>{{metric.title}}</span><b class="metric-symbol" :class="metric.class">{{metric.symbol}}</b></div><div class="metric-value">{{metric.value}} <small>{{metric.unit}}</small></div><p>{{metric.caption}}</p></article></ReCol></el-row>
-<div class="two-column"><section class="panel"><div class="panel-title"><div><span class="overline">MARINE CONDITIONS</span><h3>近海环境趋势</h3></div><span class="pill reference">{{workspace.mode==='snapshot'?'内置预报快照':'在线模型预报'}}</span></div><p class="subline">显示时刻 {{raw.hourly.time[hourIndex]}}（北京时间） · 预报有效期 {{raw.hourly.time[0]}} — {{raw.hourly.time.at(-1)}}</p><ChartPanel :option="chart" label="海温与有效波高逐小时模型趋势"/><p class="footnote">获取时间 {{new Date(workspace.snapshot.fetchedAt).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'})}} · 网格 {{raw.latitude.toFixed(4)}}°N, {{raw.longitude.toFixed(4)}}°E。快照保留原始预报日期，不作为当前实测。</p></section><section class="panel workflow-panel"><div class="panel-title"><div><span class="overline">YOUR WORKFLOW</span><h3>三步完成一次评估</h3></div></div><div class="workflow-step"><b>01</b><div><h4>补充养殖参数</h4><p>填写水层温盐、海域水深和平均流速，并保留数据来源。</p></div></div><div class="workflow-step"><b>02</b><div><h4>逐条解释判断</h4><p>查看超范围项与待补充项，追溯对应的条件依据。</p></div></div><div class="workflow-step"><b>03</b><div><h4>比较情景，导出报告</h4><p>保存不同参数方案，查看结果变化，并打印完整报告。</p></div></div><router-link class="text-link" to="/scenarios">进入情景工作台 <span>→</span></router-link></section></div>
-<section class="industry-band"><div><span class="overline">LIAONING · {{industry.year}}</span><h3>扎根辽宁海洋产业</h3><p>省级统计背景，不作为示例养殖点的经营数据。</p></div><div class="industry-number"><strong>{{industry.marineAquaculture.value}}<small> 万吨</small></strong><span>{{industry.marineAquaculture.label}}</span></div><div class="industry-number"><strong>{{industry.marineProduction.value}}<small> 万吨</small></strong><span>{{industry.marineProduction.label}}</span></div><a :href="industrySource.url" target="_blank" rel="noopener noreferrer">查看官方来源 ↗</a></section><p class="footnote">海况：Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo.com</a> · Copernicus Marine / Meteo-France 等模型提供方 · CC BY 4.0。示例坐标未绑定真实养殖场。</p></template>
+<template>
+  <div class="page-heading">
+    <div>
+      <h1>读懂海况，让养殖决策有据可依。</h1>
+      <p>把公开海洋数据、辽宁养殖条件与情景比较放进一个工作台。</p>
+    </div>
+    <router-link to="/evaluation"
+      ><el-button type="primary" size="large"
+        >开始环境评估 <span class="arrow-inline">↗</span></el-button
+      ></router-link
+    >
+  </div>
+  <section class="hero-card">
+    <div class="hero-copy">
+      <span class="eyebrow">LOCAL KNOWLEDGE · CLEAR DECISIONS</span>
+      <h2>从一片海域，<br />到一份可解释的判断。</h2>
+      <p>
+        面向辽宁沿海虾夷扇贝吊耳养殖，逐项核对水温、盐度、水深和平均流速。每个结论都能查看输入来源与规则依据。
+      </p>
+      <div class="hero-tags">
+        <span>4 项条件规则</span><span>72 小时海况窗口</span
+        ><span>离线可演示</span>
+      </div>
+    </div>
+    <div
+      class="sea-visual"
+      role="img"
+      aria-label="示例海域示意图，非真实地理地图"
+    >
+      <div class="sea-grid"></div>
+      <div class="sea-ring ring-one"></div>
+      <div class="sea-ring ring-two"></div>
+      <div class="site-pin">
+        <i></i><span>长海近海<br /><small>示例查询点</small></span>
+      </div>
+      <svg class="sea-waves" viewBox="0 0 500 230" aria-hidden="true">
+        <path
+          d="M-20 95Q100 0 220 95T520 95M-20 125Q100 30 220 125T520 125M-20 155Q100 60 220 155T520 155M-20 185Q100 90 220 185T520 185"
+        />
+      </svg>
+      <div class="coordinate">
+        {{ site.latitude.toFixed(2) }}°N / {{ site.longitude.toFixed(2) }}°E
+        <span>海域示意</span>
+      </div>
+    </div>
+  </section>
+  <el-row :gutter="18" class="metrics"
+    ><ReCol
+      v-for="metric in values"
+      :key="metric.title"
+      :xs="24"
+      :sm="12"
+      :lg="6"
+      ><article class="metric-card">
+        <div class="metric-head">
+          <span>{{ metric.title }}</span
+          ><b class="metric-symbol" :class="metric.class">{{
+            metric.symbol
+          }}</b>
+        </div>
+        <div class="metric-value">
+          {{ metric.value }} <small>{{ metric.unit }}</small>
+        </div>
+        <p>{{ metric.caption }}</p>
+      </article></ReCol
+    ></el-row
+  >
+  <div class="two-column">
+    <section class="panel">
+      <div class="panel-title">
+        <div>
+          <span class="overline">MARINE CONDITIONS</span>
+          <h3>近海环境趋势</h3>
+        </div>
+        <span class="pill reference">{{
+          workspace.mode === "snapshot" ? "内置预报快照" : "在线模型预报"
+        }}</span>
+      </div>
+      <p class="subline">
+        显示时刻 {{ raw.hourly.time[hourIndex] }}（北京时间） · 预报有效期
+        {{ raw.hourly.time[0] }} — {{ raw.hourly.time.at(-1) }}
+      </p>
+      <ChartPanel :option="chart" label="海温与有效波高逐小时模型趋势" />
+      <p class="footnote">
+        获取时间
+        {{
+          new Date(workspace.snapshot.fetchedAt).toLocaleString("zh-CN", {
+            timeZone: "Asia/Shanghai",
+          })
+        }}
+        · 网格 {{ raw.latitude.toFixed(4) }}°N,
+        {{ raw.longitude.toFixed(4) }}°E。快照保留原始预报日期，不作为当前实测。
+      </p>
+    </section>
+    <section class="panel workflow-panel">
+      <div class="panel-title">
+        <div>
+          <span class="overline">YOUR WORKFLOW</span>
+          <h3>三步完成一次评估</h3>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <b>01</b>
+        <div>
+          <h4>补充养殖参数</h4>
+          <p>填写水层温盐、海域水深和平均流速，并保留数据来源。</p>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <b>02</b>
+        <div>
+          <h4>逐条解释判断</h4>
+          <p>查看超范围项与待补充项，追溯对应的条件依据。</p>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <b>03</b>
+        <div>
+          <h4>比较情景，导出报告</h4>
+          <p>保存不同参数方案，查看结果变化，并打印完整报告。</p>
+        </div>
+      </div>
+      <router-link class="text-link" to="/scenarios"
+        >进入情景工作台 <span>→</span></router-link
+      >
+    </section>
+  </div>
+  <section class="industry-band">
+    <div>
+      <span class="overline">LIAONING · {{ industry.year }}</span>
+      <h3>扎根辽宁海洋产业</h3>
+      <p>省级统计背景，不作为示例养殖点的经营数据。</p>
+    </div>
+    <div class="industry-number">
+      <strong>{{ industry.marineAquaculture.value }}<small> 万吨</small></strong
+      ><span>{{ industry.marineAquaculture.label }}</span>
+    </div>
+    <div class="industry-number">
+      <strong>{{ industry.marineProduction.value }}<small> 万吨</small></strong
+      ><span>{{ industry.marineProduction.label }}</span>
+    </div>
+    <a :href="industrySource.url" target="_blank" rel="noopener noreferrer"
+      >查看官方来源 ↗</a
+    >
+  </section>
+  <p class="footnote">
+    海况：Weather data by
+    <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer"
+      >Open-Meteo.com</a
+    >
+    · Copernicus Marine / Meteo-France 等模型提供方 · CC BY
+    4.0。示例坐标未绑定真实养殖场。
+  </p>
+</template>
