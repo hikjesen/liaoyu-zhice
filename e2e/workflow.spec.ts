@@ -8,14 +8,14 @@ test('full offline assessment, scenarios, persistence and report export',async({
  await expect(page.getByRole('heading',{name:'读懂海况，让养殖决策有据可依。'})).toBeVisible();
  await expect(page.locator('.metric-card')).toHaveCount(4);
  await page.screenshot({path:'test-results/screenshots/01-overview.png',fullPage:true});
- await page.getByRole('link',{name:/养殖条件评估 ASSESSMENT/}).click();
+ await page.locator('nav a[href="#/evaluation"]').click();
  await expect(page.getByTestId('pending-count')).toHaveText('4');
  await page.getByRole('button',{name:'载入基准情景',exact:true}).click();
  await expect(page.getByTestId('pass-count')).toHaveText('4');
  await page.getByRole('button',{name:'载入高温情景',exact:true}).click();
  await expect(page.getByTestId('outside-count')).toHaveText('1');
  await page.screenshot({path:'test-results/screenshots/02-evaluation.png',fullPage:true});
- await page.getByRole('link',{name:/情景推演 SCENARIOS/}).click();
+ await page.locator('nav a[href="#/scenarios"]').click();
  await page.getByRole('button',{name:'基准情景',exact:true}).click();
  await page.getByRole('textbox',{name:'情景名称'}).fill('基准方案');
  await page.getByRole('button',{name:'保存当前情景'}).click();
@@ -25,7 +25,7 @@ test('full offline assessment, scenarios, persistence and report export',async({
  await expect(page.locator('.scenario-table tbody tr')).toHaveCount(2);
  await page.reload();await expect(page.locator('.scenario-table tbody tr')).toHaveCount(2);
  await page.screenshot({path:'test-results/screenshots/03-scenarios.png',fullPage:true});
- await page.getByRole('link',{name:/评估报告 REPORTS/}).click();
+ await page.locator('nav a[href="#/reports"]').click();
  await expect(page.getByRole('heading',{name:'养殖环境参考评估报告'})).toBeVisible();
  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'导出 JSON',exact:true}).click();const download=await downloadPromise;const path=await download.path();expect(path).not.toBeNull();const report=JSON.parse(await readFile(path!,'utf8'));expect(report.assessment.outside).toBe(1);expect(report.scenarios).toHaveLength(2);expect(report.marine.kind).toBe('model-forecast-snapshot');
  await page.screenshot({path:'test-results/screenshots/04-report.png',fullPage:true});
