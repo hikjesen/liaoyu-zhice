@@ -1,0 +1,19 @@
+{
+  "source": "https://dbba.sacinfo.org.cn/portal/download/2639a50053cec0d0480009c83e7fc31dc52428da7ae87cbcbfbe1cab5e4647d4",
+  "retrievedDate": "2026-11-06",
+  "bytes": 1467216,
+  "sha256": "6b59558c579e23e345454d5e780c044ab8592a682765773a7845c5405f27d31d",
+  "pages": 8,
+  "checkedPage": 5,
+  "checkedClauses": [
+    "4.1",
+    "4.2"
+  ],
+  "matches": {
+    "standardId": true,
+    "depthRange": true,
+    "temperatureRange": true,
+    "salinityRange": true
+  },
+  "fullTextRedistributed": false
+}

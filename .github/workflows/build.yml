@@ -24,15 +24,12 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm test:e2e
+      - name: Archive source at this commit
+        run: git archive --format=zip --prefix=liaoyu-zhice/ --output=liaoyu-zhice-source.zip HEAD
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: acceptance-evidence
-          path: |
-            playwright-report/
-            test-results/
+          name: liaoyu-zhice-source
+          path: liaoyu-zhice-source.zip
           retention-days: 30
       - uses: actions/upload-artifact@v4
         with:
@@ -44,4 +41,23 @@ jobs:
             docs/quick-start.md
             Start-Liaoyu.cmd
             start-liaoyu.sh
+          retention-days: 30
+      - name: Select preinstalled Chromium
+        shell: bash
+        run: |
+          BROWSER=$(command -v google-chrome || command -v chromium || true)
+          if [ -n "$BROWSER" ]; then
+            "$BROWSER" --version
+            echo "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=$BROWSER" >> "$GITHUB_ENV"
+          else
+            pnpm exec playwright install chromium
+          fi
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: acceptance-evidence
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 30

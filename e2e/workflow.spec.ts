@@ -60,6 +60,12 @@ test("full offline assessment, scenarios, persistence and report export", async 
     fullPage: true,
   });
   await page.emulateMedia({ media: "print" });
+  await page.pdf({
+    path: "test-results/sample-report.pdf",
+    format: "A4",
+    printBackground: true,
+    preferCSSPageSize: true,
+  });
   await page.screenshot({
     path: "test-results/screenshots/05-print-layout.png",
     fullPage: true,
@@ -129,22 +135,18 @@ test("manual edits and report import recompute instead of trusting supplied resu
     meanCurrent: { value: 12, origin: "scenario" },
   };
   const report = { schemaVersion: 1, inputs, assessment: { outside: 99 } };
-  await page
-    .locator("input[type=file]")
-    .setInputFiles({
-      name: "report.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(report)),
-    });
+  await page.locator("input[type=file]").setInputFiles({
+    name: "report.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(report)),
+  });
   await expect(page.getByTestId("pass-count")).toHaveText("4");
   await expect(page.getByTestId("outside-count")).toHaveText("0");
-  await page
-    .locator("input[type=file]")
-    .setInputFiles({
-      name: "bad.json",
-      mimeType: "application/json",
-      buffer: Buffer.from("{bad json"),
-    });
+  await page.locator("input[type=file]").setInputFiles({
+    name: "bad.json",
+    mimeType: "application/json",
+    buffer: Buffer.from("{bad json"),
+  });
   await expect(page.getByTestId("pass-count")).toHaveText("4");
 });
 test("successful API refresh followed by failure retains last successful provenance", async ({
