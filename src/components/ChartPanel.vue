@@ -9,20 +9,26 @@ const props = defineProps<{
 const host = ref<HTMLDivElement>();
 let chart: ECharts | undefined;
 let observer: ResizeObserver | undefined;
+const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+function renderChart() {
+  chart?.setOption({ ...props.option, animation: !motion.matches }, true);
+}
 onMounted(() => {
   if (!host.value) return;
   chart = init(host.value);
-  chart.setOption(props.option);
+  renderChart();
+  motion.addEventListener("change", renderChart);
   observer = new ResizeObserver(() => chart?.resize());
   observer.observe(host.value);
 });
 watch(
   () => props.option,
-  (o) => chart?.setOption(o, true),
+  renderChart,
   { deep: true },
 );
 onBeforeUnmount(() => {
   observer?.disconnect();
+  motion.removeEventListener("change", renderChart);
   chart?.dispose();
 });
 </script>
