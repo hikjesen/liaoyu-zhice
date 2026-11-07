@@ -8,10 +8,10 @@ import {
 } from "./stores/workspace";
 const route = useRoute();
 const menus = [
-  { to: "/", label: "养殖环境总览", en: "OVERVIEW", icon: "◫" },
-  { to: "/evaluation", label: "养殖条件评估", en: "ASSESSMENT", icon: "⌘" },
-  { to: "/scenarios", label: "情景推演", en: "SCENARIOS", icon: "⇄" },
-  { to: "/reports", label: "评估报告", en: "REPORTS", icon: "▤" },
+  { to: "/", label: "养殖环境总览", en: "OVERVIEW", icon: "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" },
+  { to: "/evaluation", label: "养殖条件评估", en: "ASSESSMENT", icon: "M9 5H5v16h14V5h-4M9 3h6v4H9zM8 13l2 2 5-5M8 18h8" },
+  { to: "/scenarios", label: "情景推演", en: "SCENARIOS", icon: "M4 7h16m-4-4 4 4-4 4M20 17H4m4-4-4 4 4 4" },
+  { to: "/reports", label: "评估报告", en: "REPORTS", icon: "M14 2H5v20h14V7zM14 2v5h5M8 12h8M8 16h8" },
 ];
 </script>
 <template>
@@ -32,7 +32,7 @@ const menus = [
           :key="m.to"
           :to="m.to"
           :class="{ active: route.path === m.to }"
-          ><span class="nav-icon">{{ m.icon }}</span>
+          ><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path :d="m.icon" /></svg>
           <div>
             {{ m.label }}<small>{{ m.en }}</small>
           </div>

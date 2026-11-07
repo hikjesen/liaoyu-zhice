@@ -51,7 +51,7 @@ const values = computed(() => [
 ]);
 const chart = computed<EChartsOption>(() => ({
   animationDuration: 500,
-  color: ["#218e79", "#86b3c7"],
+  color: ["#218e79", "#527e9d"],
   tooltip: { trigger: "axis" },
   legend: { bottom: 0, icon: "roundRect" },
   grid: { left: 52, right: 48, top: 28, bottom: 64 },
@@ -59,7 +59,7 @@ const chart = computed<EChartsOption>(() => ({
     type: "category",
     boundaryGap: false,
     data: raw.value.hourly.time.map((t) => t.slice(5).replace("T", " ")),
-    axisLabel: { color: "#81918f", fontSize: 10 },
+    axisLabel: { color: "#526a78", fontSize: 10 },
   },
   yAxis: [
     {
